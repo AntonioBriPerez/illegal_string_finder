@@ -13,9 +13,4 @@ class Directory:
         self.files = self.__init_dir_files()
 
     def __init_dir_files(self):
-
-        return [File(f) for f in self.dir_route.rglob("*.*")]
-
-
-# d = Directory("/home/antonio/Escritorio/", recursive=True)
-# print(*d.files, sep="\n")
+        return [File(f) for f in self.dir_route.rglob("*.*") if f.is_file()]

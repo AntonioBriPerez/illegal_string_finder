@@ -14,16 +14,22 @@ is_binary = lambda bytes: bool(bytes.translate(None, textchars))
 
 class Finder:
     def __init__(
-        self, directory: str, str_to_find: str, recursive=True, respect_case=False
+        self,
+        directory: str,
+        str_to_find: str,
+        recursive=True,
+        respect_case=False,
+        force_ocr=False,
     ):
         self.directory = Directory(directory, recursive)
         self.cadena = str_to_find
         self.recursive = recursive
         self.respect_case = respect_case
+        self.force_ocr = force_ocr
 
     def find(self) -> List[Tuple]:
         for f in self.directory.files:
-            reader = Finder.__create_reader(f)
+            reader = self.__create_reader(f)
             output = (
                 reader.read_text(f)
                 if self.respect_case
@@ -34,12 +40,11 @@ class Finder:
                 if self.cadena in output:
                     print(f"Cadena {self.cadena} encontrada! en {f}")
 
-    @classmethod
-    def __create_reader(cls, f: File):
+    def __create_reader(self, f: File):
         try:
             if not is_binary(open(str(f.file_route), "rb").read()):
                 return TextFileReader()
             else:
-                return NonTextFileReader()
+                return NonTextFileReader(self.force_ocr)
         except Exception:
             print(f"La extension {f.extension} no esta soportada")

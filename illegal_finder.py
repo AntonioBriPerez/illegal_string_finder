@@ -7,7 +7,9 @@ def main():
         str_to_find="hola",
         recursive=True,
         respect_case=True,
+        force_ocr = False
     )
+    
     print(f.find())
 
 
